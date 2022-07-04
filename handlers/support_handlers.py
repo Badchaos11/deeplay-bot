@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+import base64
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
@@ -64,11 +64,15 @@ async def support_ticket_finish(message: types.Message, state: FSMContext):
 
     await message.photo[-1].download(f"tickets/images/{ticket_image['file_unique_id']}.jpg")  # Сохранение изображения
 
+    with open(f"tickets/images/{ticket_image['file_unique_id']}.jpg", "rb") as image:
+        encoded_image = base64.b64encode(image.read())
+
     # Создание структуры JSON-документа
     data = {"ticket": {
         'type': ticket_type,
         'description': ticket_description,
-        'path_to_image': f"tickets/images/{ticket_image['file_unique_id']}.jpg"
+        'path_to_image': f"tickets/images/{ticket_image['file_unique_id']}.jpg",
+        "base64_image": encoded_image.decode("utf-8")
     }}
 
     # Сохранение запроса
