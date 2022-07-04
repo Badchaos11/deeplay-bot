@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-from config.keyboard import support_keyboard, main_keyboard
+from config.keyboard import support_keyboard, main_keyboard, cancel_operation
 from loader import dp, bot
 
 
@@ -36,7 +36,8 @@ async def support_ticket_describe(message: types.Message, state: FSMContext):
     await state.update_data(ticket_type=message.text)  # Сохранение темы запроса в память
 
     await SupportTicket.next()  # Изменение сосотяния
-    await message.answer("Введите описание проблемы")
+    await message.answer("Введите описание проблемы",
+                         reply_markup=cancel_operation)
 
 
 @dp.message_handler(state=SupportTicket.waiting_for_ticket_description)  # Третья функция в цепочке
@@ -48,7 +49,8 @@ async def support_ticket_load_image(message: types.Message, state: FSMContext):
     await state.update_data(ticket_description=message.text)  # Сохранения описания в память
 
     await SupportTicket.next()  # Изменение состояния
-    await message.answer("Загрузите изображение, показывающее вашу проблему")
+    await message.answer("Загрузите изображение, показывающее вашу проблему",
+                         reply_markup=cancel_operation)
 
 
 @dp.message_handler(state=SupportTicket.waiting_for_ticket_image, content_types=["photo"])  # Завершение цепочки
