@@ -47,3 +47,9 @@ async def reject(message: types.Message, state: FSMContext):
     await message.answer("Действия отменены, возврат в главное меню",  # Сообщение о переходе
                          reply_markup=main_keyboard)  # Изменение меню
     await state.finish()  # Сброс состояний и запомненных действий, если они были
+
+
+@dp.message_handler(content_types=["text"])
+async def random_message(message: types.Message):
+    await message.answer("Данная команда не найдена, попробуйте воспользоваться одним из пунктов меню и следуйте "
+                         "дальнейшим инструкциям")

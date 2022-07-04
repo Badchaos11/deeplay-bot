@@ -40,11 +40,13 @@ async def new_credit_size(message: types.Message, state: FSMContext):  # Вто�
 
 @dp.message_handler(state=NewCredit.waiting_for_credit_size)
 async def new_credit_add_final(message: types.Message, state: FSMContext):  # Последняя функция в цепочке
-    if len(message.text) == 0:
-        await message.answer("Введите корректную сумму кредита")
+    try:
+        float(message.text)
+    except ValueError:
+        await message.answer("Сумма кредита должна быть числом, введите сумму ещё раз")
         return
-    elif int(message.text) < 0:  # Проверка на знак числа
-        await message.answer("Введите корректную сумму кредита",
+    if float(message.text) < 0:  # Проверка на знак числа
+        await message.answer("Сумма кредита должна быть положительной, введите сумму ещё раз",
                              reply_markup=cancel_operation)
         return
 
