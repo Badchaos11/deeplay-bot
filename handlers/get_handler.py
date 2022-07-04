@@ -19,6 +19,7 @@ async def all_credits(message: types.Message):
         await message.answer("В настоящий момент кредитов нет")  # Проверка на наличие кредитов.
     for credit in credit_data:
         final_sum += credit['size']  # Суммирование всех кредитов
+    await message.answer(f"Общая сумма задолженности: {final_sum}")
     for credit in credit_data:
         await message.answer(f"В банке {credit['bank']} содержится "  # Вывод результата
                              f"{round((credit['size'] / final_sum) * 100, 3)}% "  # Процент по каждому кредиту  
