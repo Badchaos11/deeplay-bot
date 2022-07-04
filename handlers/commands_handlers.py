@@ -23,7 +23,7 @@ async def welcome(message: types.Message):  # Функция для начала
     else:  # етвь добавления нового пользователя
         user_added = add_user(message.from_user.id)  # Добавление пользователя в базу
         if user_added:  # При успехе добавления
-            await message.answer("Здравствуйте, {message.from_user.username}")  # Приветствие
+            await message.answer(f"Здравствуйте, {message.from_user.full_name}")  # Приветствие
             await message.answer("Дальнейшие варианты действия представлены в клавиатуре",  # Сообщение и переход к меню
                                  reply_markup=main_keyboard)  # Изменение клавиатуры
         else:
