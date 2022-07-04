@@ -61,22 +61,20 @@ async def support_ticket_finish(message: types.Message, state: FSMContext):
     ticket_type = ticket_data['ticket_type']  # Создание переменных для удобства кода
     ticket_description = ticket_data['ticket_description']  # Из памяти получены тема и описание запроса
     ticket_image = await bot.get_file(message.photo[-1].file_id)  # Получение информации об загруженном изображении
-    file_path = ticket_image.file_path
 
-    print(file_path)
     await message.photo[-1].download(f"tickets/images/{ticket_image['file_unique_id']}.jpg")  # Сохранение изображения
 
     # Создание структуры JSON-документа
     data = {"ticket": {
         'type': ticket_type,
         'description': ticket_description,
-        'image': f"tickets/images/{ticket_image['file_unique_id']}.jpg"
+        'path_to_image': f"tickets/images/{ticket_image['file_unique_id']}.jpg"
     }}
 
     # Сохранение запроса
-    with open(f"tickets/ticket-{message.from_user.id}-{datetime.now()}", "w") as result_file:
+    with open(f"tickets/ticket-{message.from_user.id}-{ticket_image['file_unique_id']}", "w") as result_file:
         json.dump(data, result_file)
-
+    print("Тикет успешно сохранен")
     await state.finish()  # Сброс состояний и очистка хранилища
     await message.answer("Обращение в службу поддержки успешно создано.",
                          reply_markup=main_keyboard)  # Переход в главное меню
